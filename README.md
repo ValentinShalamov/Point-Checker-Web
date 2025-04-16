@@ -64,3 +64,5 @@ https://valentin-shalamov.pro/lab4
 
 ## Данные для связи
 Email для связи: [valentin98shalamov@gmail.com](mailto:valentin98shalamov@gmail.com)
+
+Telegram: https://t.me/valekshalam
