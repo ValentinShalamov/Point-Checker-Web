@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: points backend
+
+  # Database connection settings
+  datasource:
+    url: jdbc:postgresql://localhost:5432/point_results
+    username: pr_app
+    password: resp1q
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # Hibernate setting
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  # Server setting
+server:
+  port: 8083

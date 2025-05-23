@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -25,12 +24,9 @@ import java.util.Optional;
 public class UserAuthenticationFilter extends OncePerRequestFilter {
     public static final String X_REDIRECT = "X-Redirect";
 
-    private static final String LOGIN_PAGE_URL_FIRST = "/";
-    private static final String LOGIN_PAGE_URL_SECOND = "/login";
+    private static final String ROOT_PAGE = "/";
+    private static final String LOGIN_PAGE = "/login";
     private static final String POINTS_PAGE = "/points";
-
-    private static final String STYLE_CSS = "/start_page_styles/login.css";
-    private static final String FAVICON_ICO = "/favicon.ico";
 
     private final UserService userService;
 
@@ -47,7 +43,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                 var userAuthentication =
                         new UserAuthentication(userPrincipal, false);
 
-                if (isSessionIdExpired(userPrincipal)) {
+                if (isSessionIdActive(userPrincipal)) {
                     userPrincipal.eraseCredentials();
                     userAuthentication.setAuthenticated(true);
 
@@ -55,39 +51,25 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                     context.setAuthentication(userAuthentication);
                     SecurityContextHolder.setContext(context);
 
-                    if (isRequestToLoginPage(request)) {
+                    if (isRequestToStartPage(request)) {
                         response.setStatus(HttpServletResponse.SC_OK);
                         response.setHeader(X_REDIRECT, POINTS_PAGE);
                         return;
                     }
-                    filterChain.doFilter(request, response);
-                    return;
                 }
 
             }
         }
-        if (isRequestToLoginPage(request)
-                || isRequestToStaticContent(request)) {
-            filterChain.doFilter(request, response);
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
+        filterChain.doFilter(request, response);
     }
 
-    private boolean isRequestToLoginPage(HttpServletRequest request) {
-        return request.getServletPath().equals(LOGIN_PAGE_URL_FIRST)
-                || request.getServletPath().equals(LOGIN_PAGE_URL_SECOND);
+    private boolean isRequestToStartPage(HttpServletRequest request) {
+        return request.getServletPath().equals(LOGIN_PAGE)
+                || request.getServletPath().equals(ROOT_PAGE);
     }
 
-    private boolean isRequestToStaticContent(HttpServletRequest request) {
-        return request.getServletPath().equals(STYLE_CSS)
-                || request.getServletPath().equals(FAVICON_ICO);
-    }
-
-    private boolean isSessionIdExpired(UserPrincipal userPrincipal) {
-        return Optional.of(userPrincipal.getExpirationDate())
-                .map(expirationDate -> expirationDate.isAfter(LocalDateTime.now()))
-                .orElse(false);
+    private boolean isSessionIdActive(UserPrincipal userPrincipal) {
+        return userPrincipal.getExpirationDate() != null && userPrincipal.getExpirationDate().isAfter(LocalDateTime.now());
     }
 
 }

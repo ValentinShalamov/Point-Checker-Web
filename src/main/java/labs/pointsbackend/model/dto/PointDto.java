@@ -1,28 +1,27 @@
 package labs.pointsbackend.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.web.bind.annotation.BindParam;
 
 public record PointDto(
-        @BindParam("id")
         Long id,
 
-        @BindParam("x_value")
+        @JsonProperty("x_value")
         @NotNull
         @Min(value = MIN_X_VALUE)
         @Max(value = MAX_X_VALUE)
         Double x,
 
-        @BindParam("y_value")
+        @JsonProperty("y_value")
         @NotNull
         @Min(value = MIN_Y_VALUE)
         @Max(value = MAX_Y_VALUE)
         Double y,
 
-        @BindParam("r_value")
+        @JsonProperty("r_value")
         @NotNull
         @Min(value = MIN_R_VALUE)
         @Max(value = MAX_R_VALUE)

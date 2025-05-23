@@ -1,6 +1,8 @@
 package labs.pointsbackend.model.services;
 
-import labs.pointsbackend.model.dto.UserDto;
+import labs.pointsbackend.exception.UserAlreadyExistsException;
+import labs.pointsbackend.exception.UserNotFoundException;
+import labs.pointsbackend.model.dto.CredentialsDto;
 import labs.pointsbackend.model.entities.User;
 import labs.pointsbackend.model.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -21,31 +23,32 @@ public class UserService {
     public static final String USER_NOT_FOUND = "Such user was not found";
 
     @Transactional
-    public User registerUserAndGet(UserDto userDto) {
-        return userRepository.findUserByName(userDto.name()) == null
-                ? userRepository.save(userSecurityService.createSessionUser(userDto)) : null;
+    public User registerUserAndGet(CredentialsDto credentialsDto) {
+        if (userRepository.findUserByName(credentialsDto.name()) == null) {
+            return userRepository.save(userSecurityService.createSessionUser(credentialsDto));
+        } else {
+            throw new UserAlreadyExistsException(USER_ALREADY_REGISTERED);
+        }
     }
 
     @Transactional
-    public User getUserWithNewSession(UserDto userDto) {
-
+    public User getUserWithNewSession(CredentialsDto credentialsDto) {
         User user = userRepository.findUserByNameAndPassword(
-                userDto.name(), userSecurityService.encodePassword(userDto.password()));
+                credentialsDto.name(), userSecurityService.encodePassword(credentialsDto.password()));
 
         if (user != null) {
             user.setSessionId(userSecurityService.generateSessionId());
             user.setSessionIdExpirationDate(userSecurityService.generateExpirationDate());
             return user;
         } else {
-            return null;
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
-
     }
 
     @Transactional
     public void eraseSessionId(String sessionId) {
         Optional.of(findUserBySessionId(sessionId))
-                .ifPresent(user -> user.setSessionId(""));
+                .ifPresent(user -> user.setSessionId(null));
     }
 
     public User findUserBySessionId(String sessionId) {

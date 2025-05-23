@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http
                 .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                        .requestMatchers("/","/login","/start_page_styles/**", "/favicon.ico")
+                        .requestMatchers("/","/login", "/register")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

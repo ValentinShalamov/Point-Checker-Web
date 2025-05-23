@@ -1,7 +1,7 @@
 package labs.pointsbackend.model.services;
 
 import labs.pointsbackend.model.entities.User;
-import labs.pointsbackend.model.dto.UserDto;
+import labs.pointsbackend.model.dto.CredentialsDto;
 import lombok.AllArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
@@ -26,10 +26,10 @@ public class UserSecurityService {
         return LocalDateTime.now().plusHours(EXPIRY_DATE_SESSION_IN_HOURS);
     }
 
-    public User createSessionUser(UserDto userDto) {
+    public User createSessionUser(CredentialsDto credentialsDto) {
         return new User(
-                userDto.name(),
-                encodePassword(userDto.password()),
+                credentialsDto.name(),
+                encodePassword(credentialsDto.password()),
                 generateSessionId(),
                 generateExpirationDate());
     }

@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
     private String sessionId;
     private LocalDateTime sessionIdExpirationDate;

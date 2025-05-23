@@ -1,6 +1,5 @@
 package labs.pointsbackend.controllers;
 
-
 import jakarta.validation.Valid;
 import labs.pointsbackend.config.security.authentications.UserPrincipal;
 import labs.pointsbackend.model.dto.PointDto;
@@ -14,34 +13,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/point")
 @AllArgsConstructor
 public class PointController {
-    private static final String POINT_URL = "/point";
 
     private PointService pointService;
 
-    @GetMapping(POINT_URL)
+    @GetMapping
     public List<Point> getPoints(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return pointService.findPointsByUserId(userPrincipal.getUserId());
     }
 
-    @PostMapping(POINT_URL)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPoint(@ModelAttribute @Valid PointDto pointDto,
+    public void addPoint(@RequestBody @Valid PointDto pointDto,
                          @AuthenticationPrincipal UserPrincipal userPrincipal) {
         pointService.addPoint(pointDto, userPrincipal.getUserId());
     }
 
-    @PutMapping(POINT_URL)
+    @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updatePoint(@ModelAttribute @Valid PointDto pointDto,
+    public void updatePoint(@RequestBody @Valid PointDto pointDto,
                             @AuthenticationPrincipal UserPrincipal userPrincipal) {
         pointService.updatePoint(pointDto, userPrincipal.getUserId());
     }
 
-    @DeleteMapping(POINT_URL)
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePoint(@ModelAttribute PointDto pointDto,
+    public void deletePoint(@RequestBody PointDto pointDto,
                             @AuthenticationPrincipal UserPrincipal userPrincipal) {
         pointService.deletePoint(pointDto, userPrincipal.getUserId());
     }
