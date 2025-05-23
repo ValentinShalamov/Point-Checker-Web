@@ -3,6 +3,8 @@
 
 **Point Checker Web** - одностраничное веб приложение (SPA), предназначенное для проверки попадания точки в заданную область на графике
 
+Текущий репозиторий включает только бэкенд приложения. С фронтендом вы можете ознакомиться, перейдя по ссылке [frontend](https://github.com/ValentinShalamov/Point-Checker-Web-Frontend)
+
 Приложение построено с использованием  **React (Vite)** на фронтенде и **Spring** на бэкенде
 
 Основные функции:
@@ -62,3 +64,5 @@ https://valentin-shalamov.pro/lab4
 
 ## Данные для связи
 Email для связи: [valentin98shalamov@gmail.com](mailto:valentin98shalamov@gmail.com)
+
+Telegram: https://t.me/valekshalam
